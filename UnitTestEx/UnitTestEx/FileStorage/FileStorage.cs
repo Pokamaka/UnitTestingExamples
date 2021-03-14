@@ -5,43 +5,62 @@ using UnitTestEx;
 
 namespace UnitTestEx
 {
+    /// <summary>
+    /// Класс файлового хранилища
+    /// </summary>
     public class FileStorage
     {
+        /// <summary>
+        /// Само "хранилище" с файлами
+        /// </summary>
         private List<File> files = new List<File>();
+
+        /// <summary>
+        /// Доступный размер хранилища
+        /// </summary>
         private double availableSize = 100;
+
+        /// <summary>
+        /// Максимальный размер хранилища
+        /// </summary>
         private double maxSize = 100;
 
-        /**
-         * Construct object and set max storage size and available size according passed values
-         * @param size FileStorage size
-         */
-        public FileStorage(int size) {
+        /// <summary>
+        /// Главная функция приложения
+        /// </summary>
+        /// <param name="size">Принимает максимальный размер хранилища</param>
+        public FileStorage(int size)
+        {
             maxSize = size;
             availableSize += maxSize;
         }
 
-        /**
-         * Construct object and set max storage size and available size based on default value=100
-         */
-        public FileStorage() {
+        /// <summary>
+        /// Если надо будет установить дэфолтный размер и допустимый
+        /// Construct object and set max storage size and available size based on default value=10
+        /// </summary>
+        public FileStorage()
+        {
+
         }
 
-
-        /**
-         * Write file in storage if filename is unique and size is not more than available size
-         * @param file to save in file storage
-         * @return result of file saving
-         * @throws FileNameAlreadyExistsException in case of already existent filename
-         */
-        public bool Write(File file) {
+        /// <summary>
+        /// Добавляпем файл в хранилище, если имя уникально и размер не привышает допустимый
+        /// </summary>
+        /// <param name="file">Принимает файл для сохранения в хранилище</param>
+        /// <returns>Возращает True - сохранен, False - не сохранен</returns>
+        public bool Write(File file)
+        {
             // Проверка существования файла
-            if (IsExists(file.GetFilename())) {
+            if (IsExists(file.GetFilename()))
+            {
                 //Если файл уже есть, то кидаем ошибку
                 throw new FileNameAlreadyExistsException();
             }
 
             //Проверка того, размер файла не привышает доступный объем памяти
-            if (file.GetSize() >= availableSize) {
+            if (file.GetSize() >= availableSize)
+            {
                 return false;
             }
 
@@ -53,48 +72,57 @@ namespace UnitTestEx
             return true;
         }
 
-        /**
-         * Check is file exist in storage
-         * @param fileName to search
-         * @return result of checking
-         */
-        public bool IsExists(String fileName) {
+        /// <summary>
+        /// Функция проверки уникальности файла в храниилще
+        /// </summary>
+        /// <param name="fileName">Принимает имя добавляемоего в хранилище файла</param>
+        /// <returns>Возращает True - файл уже есть, False - файл уникален<returns>
+        public bool IsExists(String fileName)
+        {
             // Для каждого элемента с типом File из Листа files
-            foreach (File file in files) {
+            foreach (File file in files)
+            {
                 // Проверка имени
-                if (file.GetFilename().Contains(fileName)) {
+                if (file.GetFilename().Contains(fileName))
+                {
                     return true;
                 }
             }
             return false;
         }
 
-        /**
-         * Delete file from storage
-         * @param fileName of file to delete
-         * @return result of file deleting
-         */
-        public bool Delete(String fileName) {
+        /// <summary>
+        /// Функция удаления файла их хранилища
+        /// </summary>
+        /// <param name="fileName">Умя удаляемого файла</param>
+        /// <returns>Возращает True - файл удален, False - файл не удалёене</returns>
+        public bool Delete(String fileName)
+        {
             return files.Remove(GetFile(fileName));
         }
 
-        /**
-         * Get all Files saved in the storage
-         * @return list of files
-         */
-        public List<File> GetFiles() {
+        /// <summary>
+        /// Функция выдачи всех  файлов хранилиища
+        /// </summary>
+        /// <returns>Возращает список хранимых файлов</returns>
+        public List<File> GetFiles()
+        {
             return files;
         }
 
-        /**
-         * Get file by filename
-         * @param fileName of file to get
-         * @return file
-         */
-        public File GetFile(String fileName) {
-            if (IsExists(fileName)) {
-                foreach (File file in files) {
-                    if (file.GetFilename().Contains(fileName)) {
+        /// <summary>
+        /// Функция получения файла из хранилища
+        /// </summary>
+        /// <param name="fileName">Принимает имя необходимого файла</param>
+        /// <returns>Возращает искомый файл из хранилища</returns>
+        public File GetFile(String fileName)
+        {
+            if (IsExists(fileName))
+            {
+                foreach (File file in files)
+                {
+                    if (file.GetFilename().Contains(fileName))
+                    {
                         return file;
                     }
                 }
@@ -102,10 +130,10 @@ namespace UnitTestEx
             return null;
         }
 
-        /**
-         * Delete all files from files list
-         * @return bool
-         */
+        /// <summary>
+        /// Удаление всех файлов из хранилища
+        /// </summary>
+        /// <returns>Возращает True - все файлы удалены, False - ничего не изменилось</returns>
         public bool DeleteAllFiles()
         {
             files.RemoveRange(0, files.Count - 1);
